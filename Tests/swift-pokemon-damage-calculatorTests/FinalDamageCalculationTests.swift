@@ -93,10 +93,7 @@ import Testing
                 defensiveStatCategory: .physical,
                 defenderTypes: .dual(.grass, .fighting)
             ),
-            field: DamageCalculation.Context.Field(
-                weather: .clear,
-                typeEffectiveness: .half
-            )
+            field: DamageCalculation.Context.Field(weather: .clear)
         )
     )
 

@@ -8,5 +8,7 @@
 
 public enum BattleWeather: Equatable {
     case clear
+    case sun
+    case rain
     case sandstorm
 }

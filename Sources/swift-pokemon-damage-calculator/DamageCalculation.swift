@@ -59,33 +59,27 @@ public struct DamageCalculation {
             public let weather: BattleWeather
             public let moveTargetScope: MoveTargetScope
             public let parentalBondHit: ParentalBondHit
-            public let weatherDamageModifier: DamageWeatherModifier
-            public let specialMoveDamageModifier: SpecialMoveDamageModifier
-            public let criticalModifier: CriticalModifier
-            public let typeEffectiveness: TypeEffectiveness
-            public let zMoveProtectModifier: ZMoveProtectModifier
-            public let maxMoveProtectModifier: MaxMoveProtectModifier
+            public let specialMovePowerUp: SpecialMovePowerUp
+            public let isCritical: Bool
+            public let isProtectedByZMove: Bool
+            public let isProtectedByMaxMove: Bool
 
             public init(
                 weather: BattleWeather,
                 moveTargetScope: MoveTargetScope = .single,
                 parentalBondHit: ParentalBondHit = .normal,
-                weatherDamageModifier: DamageWeatherModifier = .none,
-                specialMoveDamageModifier: SpecialMoveDamageModifier = .none,
-                criticalModifier: CriticalModifier = .normal,
-                typeEffectiveness: TypeEffectiveness = .neutral,
-                zMoveProtectModifier: ZMoveProtectModifier = .none,
-                maxMoveProtectModifier: MaxMoveProtectModifier = .none
+                specialMovePowerUp: SpecialMovePowerUp = .none,
+                isCritical: Bool = false,
+                isProtectedByZMove: Bool = false,
+                isProtectedByMaxMove: Bool = false
             ) {
                 self.weather = weather
                 self.moveTargetScope = moveTargetScope
                 self.parentalBondHit = parentalBondHit
-                self.weatherDamageModifier = weatherDamageModifier
-                self.specialMoveDamageModifier = specialMoveDamageModifier
-                self.criticalModifier = criticalModifier
-                self.typeEffectiveness = typeEffectiveness
-                self.zMoveProtectModifier = zMoveProtectModifier
-                self.maxMoveProtectModifier = maxMoveProtectModifier
+                self.specialMovePowerUp = specialMovePowerUp
+                self.isCritical = isCritical
+                self.isProtectedByZMove = isProtectedByZMove
+                self.isProtectedByMaxMove = isProtectedByMaxMove
             }
         }
 

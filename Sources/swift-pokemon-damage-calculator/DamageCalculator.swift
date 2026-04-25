@@ -11,6 +11,18 @@ public struct DamageCalculator {
         let attacker = context.attacker
         let defender = context.defender
         let field = context.field
+        let weatherDamageModifier = damageWeatherModifier(
+            weather: field.weather,
+            moveType: attacker.moveType
+        )
+        let specialMoveDamageModifier = specialMoveDamageModifier(for: field.specialMovePowerUp)
+        let criticalModifier = criticalModifier(isCritical: field.isCritical)
+        let typeEffectiveness = typeEffectiveness(
+            moveType: attacker.moveType,
+            defenderTypes: defender.defenderTypes
+        )
+        let zMoveProtectModifier = zMoveProtectModifier(isProtected: field.isProtectedByZMove)
+        let maxMoveProtectModifier = maxMoveProtectModifier(isProtected: field.isProtectedByMaxMove)
 
         let finalMovePower =
             FinalMovePowerCalculation
@@ -56,9 +68,9 @@ public struct DamageCalculator {
                 )
                 .applyingMoveTargetScope(field.moveTargetScope)
                 .applyingParentalBondHit(field.parentalBondHit)
-                .applyingWeatherModifier(field.weatherDamageModifier)
-                .applyingSpecialMoveDamageModifier(field.specialMoveDamageModifier)
-                .applyingCriticalModifier(field.criticalModifier)
+                .applyingWeatherModifier(weatherDamageModifier)
+                .applyingSpecialMoveDamageModifier(specialMoveDamageModifier)
+                .applyingCriticalModifier(criticalModifier)
                 .applyingRandomFactor(randomFactor)
                 .applyingSameTypeAttackBonus(
                     moveType: attacker.moveType,
@@ -66,15 +78,15 @@ public struct DamageCalculator {
                     terastalState: attacker.terastalState,
                     attackerAbility: attacker.ability
                 )
-                .applyingTypeEffectiveness(field.typeEffectiveness)
+                .applyingTypeEffectiveness(typeEffectiveness)
                 .applyingBurn(
                     attacker.burnStatus,
                     attackerAbility: attacker.ability,
                     moveCategory: defender.defensiveStatCategory
                 )
                 .applying(damageModifier)
-                .applyingZMoveProtectModifier(field.zMoveProtectModifier)
-                .applyingMaxMoveProtectModifier(field.maxMoveProtectModifier)
+                .applyingZMoveProtectModifier(zMoveProtectModifier)
+                .applyingMaxMoveProtectModifier(maxMoveProtectModifier)
                 .finalize()
                 .value
         }
@@ -85,6 +97,73 @@ public struct DamageCalculator {
         }
 
         return result
+    }
+
+    private static func damageWeatherModifier(
+        weather: BattleWeather,
+        moveType: PokemonType
+    ) -> DamageWeatherModifier {
+        switch (weather, moveType) {
+        case (.sun, .fire), (.rain, .water):
+            .strengthened
+        case (.sun, .water), (.rain, .fire):
+            .weakened
+        default:
+            .none
+        }
+    }
+
+    private static func specialMoveDamageModifier(
+        for specialMovePowerUp: SpecialMovePowerUp
+    ) -> SpecialMoveDamageModifier {
+        switch specialMovePowerUp {
+        case .none:
+            .none
+        case .collisionCourseStyle:
+            .collisionCourseStyle
+        }
+    }
+
+    private static func criticalModifier(isCritical: Bool) -> CriticalModifier {
+        isCritical ? .critical : .normal
+    }
+
+    private static func zMoveProtectModifier(isProtected: Bool) -> ZMoveProtectModifier {
+        isProtected ? .protected : .none
+    }
+
+    private static func maxMoveProtectModifier(isProtected: Bool) -> MaxMoveProtectModifier {
+        isProtected ? .protected : .none
+    }
+
+    private static func typeEffectiveness(
+        moveType: PokemonType,
+        defenderTypes: DefenderTypes
+    ) -> TypeEffectiveness {
+        let multipliers = defenderTypes.effectivenessMultipliers(against: moveType)
+        let numerator = multipliers.reduce(1) { partialResult, multiplier in
+            partialResult * multiplier.numerator
+        }
+        let denominator = multipliers.reduce(1) { partialResult, multiplier in
+            partialResult * multiplier.denominator
+        }
+
+        return switch (numerator, denominator) {
+        case (0, _):
+            .zero
+        case (1, 4):
+            .quarter
+        case (1, 2):
+            .half
+        case (1, 1):
+            .neutral
+        case (2, 1):
+            .double
+        case (4, 1):
+            .quadruple
+        default:
+            preconditionFailure("Unsupported type effectiveness: \(numerator)/\(denominator)")
+        }
     }
 
 }

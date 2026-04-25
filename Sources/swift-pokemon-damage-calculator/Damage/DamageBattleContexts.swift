@@ -44,7 +44,7 @@ public enum ParentalBondHit: Equatable, Sendable {
     }
 }
 
-public enum DamageWeatherModifier: Equatable, Sendable {
+enum DamageWeatherModifier: Equatable, Sendable {
     case none
     case weakened
     case strengthened
@@ -61,7 +61,7 @@ public enum DamageWeatherModifier: Equatable, Sendable {
     }
 }
 
-public enum SpecialMoveDamageModifier: Equatable, Sendable {
+enum SpecialMoveDamageModifier: Equatable, Sendable {
     case none
     case collisionCourseStyle
 
@@ -75,7 +75,7 @@ public enum SpecialMoveDamageModifier: Equatable, Sendable {
     }
 }
 
-public enum CriticalModifier: Equatable, Sendable {
+enum CriticalModifier: Equatable, Sendable {
     case normal
     case critical
 
@@ -104,7 +104,7 @@ public struct DamageRandomFactor: Equatable, Sendable {
     }
 }
 
-public enum TypeEffectiveness: Equatable, Sendable {
+enum TypeEffectiveness: Equatable, Sendable {
     case zero
     case quarter
     case half
@@ -152,7 +152,7 @@ public enum BurnStatus: Equatable, Sendable {
     case burned
 }
 
-public enum ZMoveProtectModifier: Equatable, Sendable {
+enum ZMoveProtectModifier: Equatable, Sendable {
     case none
     case protected
 
@@ -166,7 +166,7 @@ public enum ZMoveProtectModifier: Equatable, Sendable {
     }
 }
 
-public enum MaxMoveProtectModifier: Equatable, Sendable {
+enum MaxMoveProtectModifier: Equatable, Sendable {
     case none
     case protected
 
@@ -178,4 +178,9 @@ public enum MaxMoveProtectModifier: Equatable, Sendable {
             1024
         }
     }
+}
+
+public enum SpecialMovePowerUp: Equatable, Sendable {
+    case none
+    case collisionCourseStyle
 }
