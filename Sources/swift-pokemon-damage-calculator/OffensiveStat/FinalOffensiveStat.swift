@@ -46,6 +46,8 @@ struct FinalOffensiveStatCalculation {
                         numerator: value * 6144,
                         denominator: 4096
                     ).rounded(.down)
+                case .adaptability, .guts:
+                    value
                 }
 
             return AbilityAdjusted(value: adjustedValue)

@@ -9,4 +9,6 @@
 public enum AttackerAbility: Equatable {
     case none
     case hustle
+    case adaptability
+    case guts
 }

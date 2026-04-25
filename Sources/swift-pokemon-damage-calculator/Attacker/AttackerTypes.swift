@@ -1,24 +1,12 @@
 //
-//  DefenderTypes.swift
+//  AttackerTypes.swift
 //  swift-pokemon-damage-calculator
 //
 //  Created by elmetal on 2026/04/25
 //
 //
 
-public enum PokemonType: Equatable {
-    case normal
-    case fighting
-    case fire
-    case water
-    case grass
-    case electric
-    case ground
-    case rock
-    case ghost
-}
-
-public enum DefenderTypes: Equatable {
+public enum AttackerTypes: Equatable {
     case single(PokemonType)
     case dual(PokemonType, PokemonType)
 
@@ -30,4 +18,9 @@ public enum DefenderTypes: Equatable {
             primary == type || secondary == type
         }
     }
+}
+
+public enum TerastalState: Equatable {
+    case none
+    case terastallized(PokemonType)
 }

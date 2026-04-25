@@ -8,14 +8,14 @@
 
 public struct DamageCalculator {
     public static func calculate(for context: DamageCalculation.Context) -> InlineArray<16, Int> {
-        _ =
+        let finalMovePower =
             FinalMovePowerCalculation
             .start(with: context.movePower)
             .applying(MovePowerModifierCalculation.start.finalize())
             .rounded()
             .ensuringMinimumValue(of: 1)
 
-        _ =
+        let finalOffensiveStat =
             FinalOffensiveStatCalculation
             .start(
                 with: context.offensiveStat,
@@ -27,7 +27,7 @@ public struct DamageCalculator {
             .rounded()
             .ensuringMinimumValue(of: 1)
 
-        _ =
+        let finalDefensiveStat =
             FinalDefensiveStatCalculation
             .start(
                 with: context.defensiveStat,
@@ -41,7 +41,46 @@ public struct DamageCalculator {
             .rounded()
             .ensuringMinimumValue(of: 1)
 
-        return [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        let damageModifier = DamageModifierCalculation.start.finalize()
+        let values = DamageRandomFactor.all.map { randomFactor in
+            FinalDamageCalculation
+                .start(level: context.level)
+                .applying(
+                    finalMovePower: finalMovePower,
+                    finalOffensiveStat: finalOffensiveStat,
+                    finalDefensiveStat: finalDefensiveStat
+                )
+                .applyingMoveTargetScope(context.moveTargetScope)
+                .applyingParentalBondHit(context.parentalBondHit)
+                .applyingWeatherModifier(context.weatherDamageModifier)
+                .applyingSpecialMoveDamageModifier(context.specialMoveDamageModifier)
+                .applyingCriticalModifier(context.criticalModifier)
+                .applyingRandomFactor(randomFactor)
+                .applyingSameTypeAttackBonus(
+                    moveType: context.moveType,
+                    attackerTypes: context.attackerTypes,
+                    terastalState: context.terastalState,
+                    attackerAbility: context.attackerAbility
+                )
+                .applyingTypeEffectiveness(context.typeEffectiveness)
+                .applyingBurn(
+                    context.burnStatus,
+                    attackerAbility: context.attackerAbility,
+                    moveCategory: context.defensiveStatCategory
+                )
+                .applying(damageModifier)
+                .applyingZMoveProtectModifier(context.zMoveProtectModifier)
+                .applyingMaxMoveProtectModifier(context.maxMoveProtectModifier)
+                .finalize()
+                .value
+        }
+
+        var result: InlineArray<16, Int> = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        for index in values.indices {
+            result[index] = values[index]
+        }
+
+        return result
     }
 
 }
