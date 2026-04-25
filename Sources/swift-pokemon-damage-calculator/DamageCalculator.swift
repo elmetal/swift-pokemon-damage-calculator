@@ -21,6 +21,8 @@ public struct DamageCalculator {
             moveType: attacker.moveType,
             defenderTypes: defender.defenderTypes
         )
+        let offensiveRankMultiplier = offensiveStatRankMultiplier(for: attacker.offensiveStatStage)
+        let defensiveRankMultiplier = defensiveStatRankMultiplier(for: defender.defensiveStatStage)
         let zMoveProtectModifier = zMoveProtectModifier(isProtected: field.isProtectedByZMove)
         let maxMoveProtectModifier = maxMoveProtectModifier(isProtected: field.isProtectedByMaxMove)
 
@@ -37,7 +39,7 @@ public struct DamageCalculator {
                 with: attacker.offensiveStat,
                 attackerAbility: attacker.ability
             )
-            .applying(OffensiveStatRankMultiplier(numerator: 1, denominator: 1))
+            .applying(offensiveRankMultiplier)
             .applyingAttackerAbility()
             .applying(OffensiveStatModifierCalculation.start.finalize())
             .rounded()
@@ -51,7 +53,7 @@ public struct DamageCalculator {
                 defenderTypes: defender.defenderTypes,
                 weather: field.weather
             )
-            .applying(DefensiveStatRankMultiplier(numerator: 1, denominator: 1))
+            .applying(defensiveRankMultiplier)
             .applyingWeatherBoost()
             .applying(DefensiveStatModifierCalculation.start.finalize())
             .rounded()
@@ -134,6 +136,29 @@ public struct DamageCalculator {
 
     private static func maxMoveProtectModifier(isProtected: Bool) -> MaxMoveProtectModifier {
         isProtected ? .protected : .none
+    }
+
+    private static func offensiveStatRankMultiplier(
+        for stage: StatStage
+    ) -> OffensiveStatRankMultiplier {
+        let (numerator, denominator) = rankFraction(for: stage)
+        return OffensiveStatRankMultiplier(numerator: numerator, denominator: denominator)
+    }
+
+    private static func defensiveStatRankMultiplier(
+        for stage: StatStage
+    ) -> DefensiveStatRankMultiplier {
+        let (numerator, denominator) = rankFraction(for: stage)
+        return DefensiveStatRankMultiplier(numerator: numerator, denominator: denominator)
+    }
+
+    private static func rankFraction(for stage: StatStage) -> (Int, Int) {
+        let rawValue = stage.rawValue
+        if rawValue >= 0 {
+            return (2 + rawValue, 2)
+        }
+
+        return (2, 2 + abs(rawValue))
     }
 
     private static func typeEffectiveness(

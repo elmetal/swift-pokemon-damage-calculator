@@ -13,6 +13,7 @@ public struct DamageCalculation {
             public let movePower: MovePower
             public let moveType: PokemonType
             public let offensiveStat: OffensiveStat
+            public let offensiveStatStage: StatStage
             public let attackerTypes: AttackerTypes
             public let terastalState: TerastalState
             public let ability: AttackerAbility
@@ -23,6 +24,7 @@ public struct DamageCalculation {
                 movePower: MovePower,
                 moveType: PokemonType = .normal,
                 offensiveStat: OffensiveStat,
+                offensiveStatStage: StatStage = .neutral,
                 attackerTypes: AttackerTypes = .single(.rock),
                 terastalState: TerastalState = .none,
                 ability: AttackerAbility,
@@ -32,6 +34,7 @@ public struct DamageCalculation {
                 self.movePower = movePower
                 self.moveType = moveType
                 self.offensiveStat = offensiveStat
+                self.offensiveStatStage = offensiveStatStage
                 self.attackerTypes = attackerTypes
                 self.terastalState = terastalState
                 self.ability = ability
@@ -42,15 +45,18 @@ public struct DamageCalculation {
         public struct Defender {
             public let defensiveStat: DefensiveStat
             public let defensiveStatCategory: DefensiveStatCategory
+            public let defensiveStatStage: StatStage
             public let defenderTypes: DefenderTypes
 
             public init(
                 defensiveStat: DefensiveStat,
                 defensiveStatCategory: DefensiveStatCategory,
+                defensiveStatStage: StatStage = .neutral,
                 defenderTypes: DefenderTypes
             ) {
                 self.defensiveStat = defensiveStat
                 self.defensiveStatCategory = defensiveStatCategory
+                self.defensiveStatStage = defensiveStatStage
                 self.defenderTypes = defenderTypes
             }
         }
