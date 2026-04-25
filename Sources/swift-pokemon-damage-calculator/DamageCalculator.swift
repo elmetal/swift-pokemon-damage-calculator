@@ -27,6 +27,20 @@ public struct DamageCalculator {
             .rounded()
             .ensuringMinimumValue(of: 1)
 
+        _ =
+            FinalDefensiveStatCalculation
+            .start(
+                with: context.defensiveStat,
+                category: context.defensiveStatCategory,
+                defenderTypes: context.defenderTypes,
+                weather: context.weather
+            )
+            .applying(DefensiveStatRankMultiplier(numerator: 1, denominator: 1))
+            .applyingWeatherBoost()
+            .applying(DefensiveStatModifierCalculation.start.finalize())
+            .rounded()
+            .ensuringMinimumValue(of: 1)
+
         return [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     }
 

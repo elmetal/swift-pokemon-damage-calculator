@@ -82,7 +82,11 @@ import Testing
     let context = DamageCalculation.Context(
         movePower: MovePower(value: 80),
         offensiveStat: OffensiveStat(value: 182),
-        attackerAbility: .none
+        attackerAbility: .none,
+        defensiveStat: DefensiveStat(value: 130),
+        defensiveStatCategory: .physical,
+        defenderTypes: .single(.rock),
+        weather: .clear
     )
 
     #expect(context.offensiveStat.value == 182)
@@ -92,7 +96,11 @@ import Testing
     let context = DamageCalculation.Context(
         movePower: MovePower(value: 80),
         offensiveStat: OffensiveStat(value: 182),
-        attackerAbility: .hustle
+        attackerAbility: .hustle,
+        defensiveStat: DefensiveStat(value: 130),
+        defensiveStatCategory: .physical,
+        defenderTypes: .single(.rock),
+        weather: .clear
     )
 
     #expect(context.attackerAbility == .hustle)

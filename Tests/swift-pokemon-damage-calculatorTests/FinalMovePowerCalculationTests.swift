@@ -36,7 +36,11 @@ import Testing
     let context = DamageCalculation.Context(
         movePower: MovePower(value: 80),
         offensiveStat: OffensiveStat(value: 182),
-        attackerAbility: .none
+        attackerAbility: .none,
+        defensiveStat: DefensiveStat(value: 130),
+        defensiveStatCategory: .physical,
+        defenderTypes: .single(.rock),
+        weather: .clear
     )
 
     #expect(context.movePower.value == 80)

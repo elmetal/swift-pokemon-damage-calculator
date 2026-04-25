@@ -11,15 +11,27 @@ public struct DamageCalculation {
         public let movePower: MovePower
         public let offensiveStat: OffensiveStat
         public let attackerAbility: AttackerAbility
+        public let defensiveStat: DefensiveStat
+        public let defensiveStatCategory: DefensiveStatCategory
+        public let defenderTypes: DefenderTypes
+        public let weather: BattleWeather
 
         public init(
             movePower: MovePower,
             offensiveStat: OffensiveStat,
-            attackerAbility: AttackerAbility
+            attackerAbility: AttackerAbility,
+            defensiveStat: DefensiveStat,
+            defensiveStatCategory: DefensiveStatCategory,
+            defenderTypes: DefenderTypes,
+            weather: BattleWeather
         ) {
             self.movePower = movePower
             self.offensiveStat = offensiveStat
             self.attackerAbility = attackerAbility
+            self.defensiveStat = defensiveStat
+            self.defensiveStatCategory = defensiveStatCategory
+            self.defenderTypes = defenderTypes
+            self.weather = weather
         }
     }
 
