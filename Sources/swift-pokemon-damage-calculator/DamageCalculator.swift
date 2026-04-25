@@ -140,13 +140,9 @@ public struct DamageCalculator {
         moveType: PokemonType,
         defenderTypes: DefenderTypes
     ) -> TypeEffectiveness {
-        let multipliers = defenderTypes.effectivenessMultipliers(against: moveType)
-        let numerator = multipliers.reduce(1) { partialResult, multiplier in
-            partialResult * multiplier.numerator
-        }
-        let denominator = multipliers.reduce(1) { partialResult, multiplier in
-            partialResult * multiplier.denominator
-        }
+        let multiplier = defenderTypes.effectivenessMultiplier(against: moveType)
+        let numerator = multiplier.numerator
+        let denominator = multiplier.denominator
 
         return switch (numerator, denominator) {
         case (0, _):

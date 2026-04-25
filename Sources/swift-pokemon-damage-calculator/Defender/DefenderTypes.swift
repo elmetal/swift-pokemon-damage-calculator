@@ -19,15 +19,13 @@ public enum DefenderTypes: Equatable {
         }
     }
 
-    func effectivenessMultipliers(against attackType: PokemonType) -> [TypeMultiplier] {
+    func effectivenessMultiplier(against attackType: PokemonType) -> TypeMultiplier {
         switch self {
         case .single(let primary):
-            [primary.effectivenessMultiplier(against: attackType)]
+            primary.effectivenessMultiplier(against: attackType)
         case .dual(let primary, let secondary):
-            [
-                primary.effectivenessMultiplier(against: attackType),
-                secondary.effectivenessMultiplier(against: attackType),
-            ]
+            primary.effectivenessMultiplier(against: attackType)
+                .multiplied(by: secondary.effectivenessMultiplier(against: attackType))
         }
     }
 }
@@ -35,53 +33,71 @@ public enum DefenderTypes: Equatable {
 struct TypeMultiplier {
     let numerator: Int
     let denominator: Int
+
+    static let zero = TypeMultiplier(numerator: 0, denominator: 1)
+    static let quarter = TypeMultiplier(numerator: 1, denominator: 4)
+    static let half = TypeMultiplier(numerator: 1, denominator: 2)
+    static let neutral = TypeMultiplier(numerator: 1, denominator: 1)
+    static let double = TypeMultiplier(numerator: 2, denominator: 1)
+    static let quadruple = TypeMultiplier(numerator: 4, denominator: 1)
+
+    func multiplied(by other: TypeMultiplier) -> TypeMultiplier {
+        if numerator == 0 || other.numerator == 0 {
+            return .zero
+        }
+
+        return TypeMultiplier(
+            numerator: numerator * other.numerator,
+            denominator: denominator * other.denominator
+        )
+    }
 }
 
 extension PokemonType {
     fileprivate func effectivenessMultiplier(against attackType: PokemonType) -> TypeMultiplier {
         switch (attackType, self) {
         case (.normal, .rock):
-            TypeMultiplier(numerator: 1, denominator: 2)
+            .half
         case (.normal, .ghost):
-            TypeMultiplier(numerator: 0, denominator: 1)
+            .zero
         case (.fighting, .normal), (.fighting, .rock):
-            TypeMultiplier(numerator: 2, denominator: 1)
+            .double
         case (.fighting, .ghost):
-            TypeMultiplier(numerator: 0, denominator: 1)
+            .zero
         case (.fire, .fire), (.fire, .water), (.fire, .rock):
-            TypeMultiplier(numerator: 1, denominator: 2)
+            .half
         case (.fire, .grass):
-            TypeMultiplier(numerator: 2, denominator: 1)
+            .double
         case (.water, .fire), (.water, .ground), (.water, .rock):
-            TypeMultiplier(numerator: 2, denominator: 1)
+            .double
         case (.water, .water), (.water, .grass):
-            TypeMultiplier(numerator: 1, denominator: 2)
+            .half
         case (.grass, .water), (.grass, .ground), (.grass, .rock):
-            TypeMultiplier(numerator: 2, denominator: 1)
+            .double
         case (.grass, .fire), (.grass, .grass), (.grass, .ghost):
-            TypeMultiplier(numerator: 1, denominator: 2)
+            .half
         case (.electric, .water):
-            TypeMultiplier(numerator: 2, denominator: 1)
+            .double
         case (.electric, .grass), (.electric, .electric):
-            TypeMultiplier(numerator: 1, denominator: 2)
+            .half
         case (.electric, .ground):
-            TypeMultiplier(numerator: 0, denominator: 1)
+            .zero
         case (.ground, .fire), (.ground, .electric), (.ground, .rock):
-            TypeMultiplier(numerator: 2, denominator: 1)
+            .double
         case (.ground, .grass):
-            TypeMultiplier(numerator: 1, denominator: 2)
+            .half
         case (.ground, .ghost):
-            TypeMultiplier(numerator: 1, denominator: 1)
+            .neutral
         case (.rock, .fire):
-            TypeMultiplier(numerator: 2, denominator: 1)
+            .double
         case (.rock, .fighting), (.rock, .ground):
-            TypeMultiplier(numerator: 1, denominator: 2)
+            .half
         case (.ghost, .ghost):
-            TypeMultiplier(numerator: 2, denominator: 1)
+            .double
         case (.ghost, .normal):
-            TypeMultiplier(numerator: 0, denominator: 1)
+            .zero
         default:
-            TypeMultiplier(numerator: 1, denominator: 1)
+            .neutral
         }
     }
 }
