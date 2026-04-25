@@ -6,18 +6,6 @@
 //
 //
 
-public enum PokemonType: Equatable {
-    case normal
-    case fighting
-    case fire
-    case water
-    case grass
-    case electric
-    case ground
-    case rock
-    case ghost
-}
-
 public enum DefenderTypes: Equatable {
     case single(PokemonType)
     case dual(PokemonType, PokemonType)
