@@ -7,7 +7,13 @@
 //
 
 public struct DamageCalculation {
-    public struct Context {}
+    public struct Context {
+        public let movePower: MovePower
+
+        public init(movePower: MovePower) {
+            self.movePower = movePower
+        }
+    }
 
     struct Quotient {
         let numerator: Int

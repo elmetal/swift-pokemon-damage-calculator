@@ -7,8 +7,14 @@
 //
 
 public struct DamageCalculator {
-    static func calculate(for context: DamageCalculation.Context) -> InlineArray<16, Int> {
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    public static func calculate(for context: DamageCalculation.Context) -> InlineArray<16, Int> {
+        _ = FinalMovePowerCalculation
+            .start(with: context.movePower)
+            .applying(MovePowerModifierCalculation.start.finalize())
+            .rounded()
+            .ensuringMinimumValue(of: 1)
+
+        return [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     }
 
 }
