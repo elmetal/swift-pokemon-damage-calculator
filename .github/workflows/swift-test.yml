@@ -1,4 +1,4 @@
-name: Swift Test
+name: Swift CI
 
 on:
   pull_request:
@@ -22,3 +22,16 @@ jobs:
 
       - name: Run test suite
         run: swift test
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Show Swift version
+        run: swift --version
+
+      - name: Run format lint
+        run: swift format lint -r -s Sources/ Tests/
