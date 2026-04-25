@@ -3,7 +3,8 @@ import Testing
 @testable import swift_pokemon_damage_calculator
 
 @Test func finalOffensiveStatCalculationRoundsRankedStatDown() {
-    let finalOffensiveStat = FinalOffensiveStatCalculation
+    let finalOffensiveStat =
+        FinalOffensiveStatCalculation
         .start(with: OffensiveStat(value: 101))
         .applying(OffensiveStatRankMultiplier(numerator: 3, denominator: 2))
         .applying(OffensiveStatModifierCalculation.start.finalize())
@@ -14,7 +15,8 @@ import Testing
 }
 
 @Test func finalOffensiveStatCalculationRoundsModifierUsingToNearestOrDown() {
-    let finalOffensiveStat = FinalOffensiveStatCalculation
+    let finalOffensiveStat =
+        FinalOffensiveStatCalculation
         .start(with: OffensiveStat(value: 1))
         .applying(OffensiveStatRankMultiplier(numerator: 1, denominator: 1))
         .applying(
@@ -29,7 +31,8 @@ import Testing
 }
 
 @Test func finalOffensiveStatCalculationEnsuresMinimumValueOfOne() {
-    let finalOffensiveStat = FinalOffensiveStatCalculation
+    let finalOffensiveStat =
+        FinalOffensiveStatCalculation
         .start(with: OffensiveStat(value: 1))
         .applying(OffensiveStatRankMultiplier(numerator: 1, denominator: 1))
         .applying(
