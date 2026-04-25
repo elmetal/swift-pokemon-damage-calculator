@@ -34,14 +34,18 @@ import Testing
 
 @Test func damageCalculationContextStoresMovePower() {
     let context = DamageCalculation.Context(
-        movePower: MovePower(value: 80),
-        offensiveStat: OffensiveStat(value: 182),
-        attackerAbility: .none,
-        defensiveStat: DefensiveStat(value: 130),
-        defensiveStatCategory: .physical,
-        defenderTypes: .single(.rock),
-        weather: .clear
+        attacker: DamageCalculation.Context.Attacker(
+            movePower: MovePower(value: 80),
+            offensiveStat: OffensiveStat(value: 182),
+            ability: .none
+        ),
+        defender: DamageCalculation.Context.Defender(
+            defensiveStat: DefensiveStat(value: 130),
+            defensiveStatCategory: .physical,
+            defenderTypes: .single(.rock)
+        ),
+        field: DamageCalculation.Context.Field(weather: .clear)
     )
 
-    #expect(context.movePower.value == 80)
+    #expect(context.attacker.movePower.value == 80)
 }

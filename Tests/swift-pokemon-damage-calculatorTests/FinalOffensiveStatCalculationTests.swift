@@ -80,28 +80,36 @@ import Testing
 
 @Test func damageCalculationContextStoresOffensiveStat() {
     let context = DamageCalculation.Context(
-        movePower: MovePower(value: 80),
-        offensiveStat: OffensiveStat(value: 182),
-        attackerAbility: .none,
-        defensiveStat: DefensiveStat(value: 130),
-        defensiveStatCategory: .physical,
-        defenderTypes: .single(.rock),
-        weather: .clear
+        attacker: DamageCalculation.Context.Attacker(
+            movePower: MovePower(value: 80),
+            offensiveStat: OffensiveStat(value: 182),
+            ability: .none
+        ),
+        defender: DamageCalculation.Context.Defender(
+            defensiveStat: DefensiveStat(value: 130),
+            defensiveStatCategory: .physical,
+            defenderTypes: .single(.rock)
+        ),
+        field: DamageCalculation.Context.Field(weather: .clear)
     )
 
-    #expect(context.offensiveStat.value == 182)
+    #expect(context.attacker.offensiveStat.value == 182)
 }
 
 @Test func damageCalculationContextStoresAttackerAbility() {
     let context = DamageCalculation.Context(
-        movePower: MovePower(value: 80),
-        offensiveStat: OffensiveStat(value: 182),
-        attackerAbility: .hustle,
-        defensiveStat: DefensiveStat(value: 130),
-        defensiveStatCategory: .physical,
-        defenderTypes: .single(.rock),
-        weather: .clear
+        attacker: DamageCalculation.Context.Attacker(
+            movePower: MovePower(value: 80),
+            offensiveStat: OffensiveStat(value: 182),
+            ability: .hustle
+        ),
+        defender: DamageCalculation.Context.Defender(
+            defensiveStat: DefensiveStat(value: 130),
+            defensiveStatCategory: .physical,
+            defenderTypes: .single(.rock)
+        ),
+        field: DamageCalculation.Context.Field(weather: .clear)
     )
 
-    #expect(context.attackerAbility == .hustle)
+    #expect(context.attacker.ability == .hustle)
 }

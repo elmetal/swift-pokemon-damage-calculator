@@ -79,18 +79,24 @@ import Testing
 @Test func damageCalculatorCalculateReturnsAllRandomRolls() {
     let damages = DamageCalculator.calculate(
         for: DamageCalculation.Context(
-            level: PokemonLevel(value: 50),
-            movePower: MovePower(value: 100),
-            moveType: .ground,
-            offensiveStat: OffensiveStat(value: 182),
-            attackerTypes: .single(.ground),
-            terastalState: .none,
-            attackerAbility: .none,
-            defensiveStat: DefensiveStat(value: 100),
-            defensiveStatCategory: .physical,
-            defenderTypes: .dual(.grass, .fighting),
-            weather: .clear,
-            typeEffectiveness: .half
+            attacker: DamageCalculation.Context.Attacker(
+                level: PokemonLevel(value: 50),
+                movePower: MovePower(value: 100),
+                moveType: .ground,
+                offensiveStat: OffensiveStat(value: 182),
+                attackerTypes: .single(.ground),
+                terastalState: .none,
+                ability: .none
+            ),
+            defender: DamageCalculation.Context.Defender(
+                defensiveStat: DefensiveStat(value: 100),
+                defensiveStatCategory: .physical,
+                defenderTypes: .dual(.grass, .fighting)
+            ),
+            field: DamageCalculation.Context.Field(
+                weather: .clear,
+                typeEffectiveness: .half
+            )
         )
     )
 

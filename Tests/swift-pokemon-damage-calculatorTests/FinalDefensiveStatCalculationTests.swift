@@ -88,17 +88,21 @@ import Testing
 
 @Test func damageCalculationContextStoresDefensiveInputs() {
     let context = DamageCalculation.Context(
-        movePower: MovePower(value: 80),
-        offensiveStat: OffensiveStat(value: 182),
-        attackerAbility: .none,
-        defensiveStat: DefensiveStat(value: 130),
-        defensiveStatCategory: .special,
-        defenderTypes: .dual(.rock, .ghost),
-        weather: .sandstorm
+        attacker: DamageCalculation.Context.Attacker(
+            movePower: MovePower(value: 80),
+            offensiveStat: OffensiveStat(value: 182),
+            ability: .none
+        ),
+        defender: DamageCalculation.Context.Defender(
+            defensiveStat: DefensiveStat(value: 130),
+            defensiveStatCategory: .special,
+            defenderTypes: .dual(.rock, .ghost)
+        ),
+        field: DamageCalculation.Context.Field(weather: .sandstorm)
     )
 
-    #expect(context.defensiveStat.value == 130)
-    #expect(context.defensiveStatCategory == .special)
-    #expect(context.defenderTypes.contains(.rock))
-    #expect(context.weather == .sandstorm)
+    #expect(context.defender.defensiveStat.value == 130)
+    #expect(context.defender.defensiveStatCategory == .special)
+    #expect(context.defender.defenderTypes.contains(.rock))
+    #expect(context.field.weather == .sandstorm)
 }

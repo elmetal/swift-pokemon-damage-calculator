@@ -8,9 +8,13 @@
 
 public struct DamageCalculator {
     public static func calculate(for context: DamageCalculation.Context) -> InlineArray<16, Int> {
+        let attacker = context.attacker
+        let defender = context.defender
+        let field = context.field
+
         let finalMovePower =
             FinalMovePowerCalculation
-            .start(with: context.movePower)
+            .start(with: attacker.movePower)
             .applying(MovePowerModifierCalculation.start.finalize())
             .rounded()
             .ensuringMinimumValue(of: 1)
@@ -18,8 +22,8 @@ public struct DamageCalculator {
         let finalOffensiveStat =
             FinalOffensiveStatCalculation
             .start(
-                with: context.offensiveStat,
-                attackerAbility: context.attackerAbility
+                with: attacker.offensiveStat,
+                attackerAbility: attacker.ability
             )
             .applying(OffensiveStatRankMultiplier(numerator: 1, denominator: 1))
             .applyingAttackerAbility()
@@ -30,10 +34,10 @@ public struct DamageCalculator {
         let finalDefensiveStat =
             FinalDefensiveStatCalculation
             .start(
-                with: context.defensiveStat,
-                category: context.defensiveStatCategory,
-                defenderTypes: context.defenderTypes,
-                weather: context.weather
+                with: defender.defensiveStat,
+                category: defender.defensiveStatCategory,
+                defenderTypes: defender.defenderTypes,
+                weather: field.weather
             )
             .applying(DefensiveStatRankMultiplier(numerator: 1, denominator: 1))
             .applyingWeatherBoost()
@@ -44,33 +48,33 @@ public struct DamageCalculator {
         let damageModifier = DamageModifierCalculation.start.finalize()
         let values = DamageRandomFactor.all.map { randomFactor in
             FinalDamageCalculation
-                .start(level: context.level)
+                .start(level: attacker.level)
                 .applying(
                     finalMovePower: finalMovePower,
                     finalOffensiveStat: finalOffensiveStat,
                     finalDefensiveStat: finalDefensiveStat
                 )
-                .applyingMoveTargetScope(context.moveTargetScope)
-                .applyingParentalBondHit(context.parentalBondHit)
-                .applyingWeatherModifier(context.weatherDamageModifier)
-                .applyingSpecialMoveDamageModifier(context.specialMoveDamageModifier)
-                .applyingCriticalModifier(context.criticalModifier)
+                .applyingMoveTargetScope(field.moveTargetScope)
+                .applyingParentalBondHit(field.parentalBondHit)
+                .applyingWeatherModifier(field.weatherDamageModifier)
+                .applyingSpecialMoveDamageModifier(field.specialMoveDamageModifier)
+                .applyingCriticalModifier(field.criticalModifier)
                 .applyingRandomFactor(randomFactor)
                 .applyingSameTypeAttackBonus(
-                    moveType: context.moveType,
-                    attackerTypes: context.attackerTypes,
-                    terastalState: context.terastalState,
-                    attackerAbility: context.attackerAbility
+                    moveType: attacker.moveType,
+                    attackerTypes: attacker.attackerTypes,
+                    terastalState: attacker.terastalState,
+                    attackerAbility: attacker.ability
                 )
-                .applyingTypeEffectiveness(context.typeEffectiveness)
+                .applyingTypeEffectiveness(field.typeEffectiveness)
                 .applyingBurn(
-                    context.burnStatus,
-                    attackerAbility: context.attackerAbility,
-                    moveCategory: context.defensiveStatCategory
+                    attacker.burnStatus,
+                    attackerAbility: attacker.ability,
+                    moveCategory: defender.defensiveStatCategory
                 )
                 .applying(damageModifier)
-                .applyingZMoveProtectModifier(context.zMoveProtectModifier)
-                .applyingMaxMoveProtectModifier(context.maxMoveProtectModifier)
+                .applyingZMoveProtectModifier(field.zMoveProtectModifier)
+                .applyingMaxMoveProtectModifier(field.maxMoveProtectModifier)
                 .finalize()
                 .value
         }
