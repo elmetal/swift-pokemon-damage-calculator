@@ -1,4 +1,5 @@
 import Testing
+
 @testable import swift_pokemon_damage_calculator
 
 @Test func example() async throws {
