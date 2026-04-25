@@ -3,7 +3,8 @@ import Testing
 @testable import swift_pokemon_damage_calculator
 
 @Test func finalMovePowerCalculationRoundsUsingToNearestOrDown() {
-    let finalMovePower = FinalMovePowerCalculation
+    let finalMovePower =
+        FinalMovePowerCalculation
         .start(with: MovePower(value: 1))
         .applying(
             MovePowerModifierCalculation.start
@@ -17,7 +18,8 @@ import Testing
 }
 
 @Test func finalMovePowerCalculationEnsuresMinimumValueOfOne() {
-    let finalMovePower = FinalMovePowerCalculation
+    let finalMovePower =
+        FinalMovePowerCalculation
         .start(with: MovePower(value: 1))
         .applying(
             MovePowerModifierCalculation.start

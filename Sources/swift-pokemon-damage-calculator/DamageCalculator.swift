@@ -8,7 +8,8 @@
 
 public struct DamageCalculator {
     public static func calculate(for context: DamageCalculation.Context) -> InlineArray<16, Int> {
-        _ = FinalMovePowerCalculation
+        _ =
+            FinalMovePowerCalculation
             .start(with: context.movePower)
             .applying(MovePowerModifierCalculation.start.finalize())
             .rounded()
