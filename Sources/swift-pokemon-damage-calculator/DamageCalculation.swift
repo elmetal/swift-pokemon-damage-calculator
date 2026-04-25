@@ -8,4 +8,9 @@
 
 public struct DamageCalculation {
     public struct Context {}
+
+    enum RoundingRule: Equatable {
+        case down
+        case toNearestOrDown
+    }
 }
