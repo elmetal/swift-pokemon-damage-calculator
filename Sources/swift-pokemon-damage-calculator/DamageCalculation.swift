@@ -10,10 +10,16 @@ public struct DamageCalculation {
     public struct Context {
         public let movePower: MovePower
         public let offensiveStat: OffensiveStat
+        public let attackerAbility: AttackerAbility
 
-        public init(movePower: MovePower, offensiveStat: OffensiveStat) {
+        public init(
+            movePower: MovePower,
+            offensiveStat: OffensiveStat,
+            attackerAbility: AttackerAbility
+        ) {
             self.movePower = movePower
             self.offensiveStat = offensiveStat
+            self.attackerAbility = attackerAbility
         }
     }
 

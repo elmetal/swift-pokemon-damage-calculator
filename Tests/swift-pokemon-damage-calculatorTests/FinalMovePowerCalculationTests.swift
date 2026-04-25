@@ -35,7 +35,8 @@ import Testing
 @Test func damageCalculationContextStoresMovePower() {
     let context = DamageCalculation.Context(
         movePower: MovePower(value: 80),
-        offensiveStat: OffensiveStat(value: 182)
+        offensiveStat: OffensiveStat(value: 182),
+        attackerAbility: .none
     )
 
     #expect(context.movePower.value == 80)

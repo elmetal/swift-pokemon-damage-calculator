@@ -19,19 +19,40 @@ struct FinalOffensiveStat {
 struct FinalOffensiveStatCalculation {
     struct Start {
         let offensiveStat: OffensiveStat
+        let attackerAbility: AttackerAbility
 
         func applying(_ rankMultiplier: OffensiveStatRankMultiplier) -> Ranked {
             Ranked(
                 value: DamageCalculation.Quotient(
                     numerator: offensiveStat.value * rankMultiplier.numerator,
                     denominator: rankMultiplier.denominator
-                )
-                .rounded(.down)
+                ).rounded(.down),
+                attackerAbility: attackerAbility
             )
         }
     }
 
     struct Ranked {
+        fileprivate let value: Int
+        fileprivate let attackerAbility: AttackerAbility
+
+        func applyingAttackerAbility() -> AbilityAdjusted {
+            let adjustedValue =
+                switch attackerAbility {
+                case .none:
+                    value
+                case .hustle:
+                    DamageCalculation.Quotient(
+                        numerator: value * 6144,
+                        denominator: 4096
+                    ).rounded(.down)
+                }
+
+            return AbilityAdjusted(value: adjustedValue)
+        }
+    }
+
+    struct AbilityAdjusted {
         fileprivate let value: Int
 
         func applying(_ modifier: OffensiveStatModifierCalculation.Finalized) -> Modified {
@@ -62,7 +83,8 @@ struct FinalOffensiveStatCalculation {
         }
     }
 
-    static func start(with offensiveStat: OffensiveStat) -> Start {
-        Start(offensiveStat: offensiveStat)
+    static func start(with offensiveStat: OffensiveStat, attackerAbility: AttackerAbility) -> Start
+    {
+        Start(offensiveStat: offensiveStat, attackerAbility: attackerAbility)
     }
 }

@@ -5,8 +5,12 @@ import Testing
 @Test func finalOffensiveStatCalculationRoundsRankedStatDown() {
     let finalOffensiveStat =
         FinalOffensiveStatCalculation
-        .start(with: OffensiveStat(value: 101))
+        .start(
+            with: OffensiveStat(value: 101),
+            attackerAbility: .none
+        )
         .applying(OffensiveStatRankMultiplier(numerator: 3, denominator: 2))
+        .applyingAttackerAbility()
         .applying(OffensiveStatModifierCalculation.start.finalize())
         .rounded()
         .ensuringMinimumValue(of: 1)
@@ -17,8 +21,12 @@ import Testing
 @Test func finalOffensiveStatCalculationRoundsModifierUsingToNearestOrDown() {
     let finalOffensiveStat =
         FinalOffensiveStatCalculation
-        .start(with: OffensiveStat(value: 1))
+        .start(
+            with: OffensiveStat(value: 1),
+            attackerAbility: .none
+        )
         .applying(OffensiveStatRankMultiplier(numerator: 1, denominator: 1))
+        .applyingAttackerAbility()
         .applying(
             OffensiveStatModifierCalculation.start
                 .applying(OffensiveStatModifier(numerator: 6144))
@@ -30,11 +38,35 @@ import Testing
     #expect(finalOffensiveStat.value == 1)
 }
 
+@Test func finalOffensiveStatCalculationAppliesHustleBeforeOffensiveStatModifier() {
+    let finalOffensiveStat =
+        FinalOffensiveStatCalculation
+        .start(
+            with: OffensiveStat(value: 100),
+            attackerAbility: .hustle
+        )
+        .applying(OffensiveStatRankMultiplier(numerator: 1, denominator: 1))
+        .applyingAttackerAbility()
+        .applying(
+            OffensiveStatModifierCalculation.start
+                .applying(OffensiveStatModifier(numerator: 5325))
+                .finalize()
+        )
+        .rounded()
+        .ensuringMinimumValue(of: 1)
+
+    #expect(finalOffensiveStat.value == 195)
+}
+
 @Test func finalOffensiveStatCalculationEnsuresMinimumValueOfOne() {
     let finalOffensiveStat =
         FinalOffensiveStatCalculation
-        .start(with: OffensiveStat(value: 1))
+        .start(
+            with: OffensiveStat(value: 1),
+            attackerAbility: .none
+        )
         .applying(OffensiveStatRankMultiplier(numerator: 1, denominator: 1))
+        .applyingAttackerAbility()
         .applying(
             OffensiveStatModifierCalculation.start
                 .applying(OffensiveStatModifier(numerator: 2048))
@@ -49,8 +81,19 @@ import Testing
 @Test func damageCalculationContextStoresOffensiveStat() {
     let context = DamageCalculation.Context(
         movePower: MovePower(value: 80),
-        offensiveStat: OffensiveStat(value: 182)
+        offensiveStat: OffensiveStat(value: 182),
+        attackerAbility: .none
     )
 
     #expect(context.offensiveStat.value == 182)
+}
+
+@Test func damageCalculationContextStoresAttackerAbility() {
+    let context = DamageCalculation.Context(
+        movePower: MovePower(value: 80),
+        offensiveStat: OffensiveStat(value: 182),
+        attackerAbility: .hustle
+    )
+
+    #expect(context.attackerAbility == .hustle)
 }

@@ -17,8 +17,12 @@ public struct DamageCalculator {
 
         _ =
             FinalOffensiveStatCalculation
-            .start(with: context.offensiveStat)
+            .start(
+                with: context.offensiveStat,
+                attackerAbility: context.attackerAbility
+            )
             .applying(OffensiveStatRankMultiplier(numerator: 1, denominator: 1))
+            .applyingAttackerAbility()
             .applying(OffensiveStatModifierCalculation.start.finalize())
             .rounded()
             .ensuringMinimumValue(of: 1)
