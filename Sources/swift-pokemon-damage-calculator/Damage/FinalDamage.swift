@@ -148,13 +148,13 @@ struct FinalDamageCalculation {
     struct SameTypeAttackBonusAdjusted {
         fileprivate let value: Int
 
-        func applyingTypeEffectiveness(_ typeEffectiveness: TypeEffectiveness)
+        func applyingTypeEffectiveness(_ typeMultiplier: TypeMultiplier)
             -> TypeEffectivenessAdjusted
         {
             TypeEffectivenessAdjusted(
                 value: DamageCalculation.Quotient(
-                    numerator: value * typeEffectiveness.numerator,
-                    denominator: typeEffectiveness.denominator
+                    numerator: value * typeMultiplier.numerator,
+                    denominator: typeMultiplier.denominator
                 ).rounded(.down)
             )
         }

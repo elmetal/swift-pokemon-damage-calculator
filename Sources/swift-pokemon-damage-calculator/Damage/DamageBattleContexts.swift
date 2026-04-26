@@ -104,49 +104,6 @@ public struct DamageRandomFactor: Equatable, Sendable {
     }
 }
 
-enum TypeEffectiveness: Equatable, Sendable {
-    case zero
-    case quarter
-    case half
-    case neutral
-    case double
-    case quadruple
-
-    var numerator: Int {
-        switch self {
-        case .zero:
-            0
-        case .quarter:
-            1
-        case .half:
-            1
-        case .neutral:
-            1
-        case .double:
-            2
-        case .quadruple:
-            4
-        }
-    }
-
-    var denominator: Int {
-        switch self {
-        case .zero:
-            1
-        case .quarter:
-            4
-        case .half:
-            2
-        case .neutral:
-            1
-        case .double:
-            1
-        case .quadruple:
-            1
-        }
-    }
-}
-
 public enum BurnStatus: Equatable, Sendable {
     case none
     case burned

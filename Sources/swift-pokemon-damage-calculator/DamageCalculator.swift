@@ -23,8 +23,8 @@ public struct DamageCalculator {
             isCollisionCourseStyleBoosted: field.isCollisionCourseStyleBoosted
         )
         let criticalModifier = criticalModifier(isCritical: field.isCritical)
-        let typeEffectiveness = typeEffectiveness(
-            moveType: attacker.moveType,
+        let typeMultiplier = TypeChart.effectivenessMultiplier(
+            attackType: attacker.moveType,
             defenderTypes: defender.defenderTypes
         )
         let offensiveRankMultiplier = offensiveStatRankMultiplier(for: attacker.offensiveStatStage)
@@ -86,7 +86,7 @@ public struct DamageCalculator {
                     terastalState: attacker.terastalState,
                     attackerAbility: attacker.ability
                 )
-                .applyingTypeEffectiveness(typeEffectiveness)
+                .applyingTypeEffectiveness(typeMultiplier)
                 .applyingBurn(
                     attacker.burnStatus,
                     attackerAbility: attacker.ability,
@@ -168,35 +168,6 @@ public struct DamageCalculator {
         }
 
         return (2, 2 + abs(rawValue))
-    }
-
-    private static func typeEffectiveness(
-        moveType: PokemonType,
-        defenderTypes: DefenderTypes
-    ) -> TypeEffectiveness {
-        let multiplier = TypeChart.effectivenessMultiplier(
-            attackType: moveType,
-            defenderTypes: defenderTypes
-        )
-        let numerator = multiplier.numerator
-        let denominator = multiplier.denominator
-
-        return switch (numerator, denominator) {
-        case (0, _):
-            .zero
-        case (1, 4):
-            .quarter
-        case (1, 2):
-            .half
-        case (1, 1):
-            .neutral
-        case (2, 1):
-            .double
-        case (4, 1):
-            .quadruple
-        default:
-            preconditionFailure("Unsupported type effectiveness: \(numerator)/\(denominator)")
-        }
     }
 
 }

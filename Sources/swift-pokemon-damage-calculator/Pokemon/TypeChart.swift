@@ -43,7 +43,7 @@ struct TypeChart {
 }
 
 extension TypeMultiplier {
-    fileprivate init(typeEffectiveness: PokemonTypes.TypeEffectiveness) {
+    fileprivate init(typeEffectiveness: TypeEffectiveness) {
         switch typeEffectiveness {
         case .ineffective:
             self = .zero
