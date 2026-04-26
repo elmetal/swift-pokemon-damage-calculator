@@ -16,7 +16,7 @@ public struct PokemonLevel: Equatable, Sendable {
     }
 }
 
-public enum MoveTargetScope: Equatable, Sendable {
+enum MoveTargetScope: Equatable, Sendable {
     case single
     case multiple
 
@@ -30,7 +30,7 @@ public enum MoveTargetScope: Equatable, Sendable {
     }
 }
 
-public enum ParentalBondHit: Equatable, Sendable {
+enum ParentalBondHit: Equatable, Sendable {
     case normal
     case second
 
@@ -178,9 +178,4 @@ enum MaxMoveProtectModifier: Equatable, Sendable {
             1024
         }
     }
-}
-
-public enum SpecialMovePowerUp: Equatable, Sendable {
-    case none
-    case collisionCourseStyle
 }

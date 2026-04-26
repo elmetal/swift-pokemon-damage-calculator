@@ -11,11 +11,15 @@ public struct DamageCalculator {
         let attacker = context.attacker
         let defender = context.defender
         let field = context.field
+        let moveTargetScope = moveTargetScope(isSpreadMove: field.isSpreadMove)
+        let parentalBondHit = parentalBondHit(isSecondHit: field.isParentalBondSecondHit)
         let weatherDamageModifier = damageWeatherModifier(
             weather: field.weather,
             moveType: attacker.moveType
         )
-        let specialMoveDamageModifier = specialMoveDamageModifier(for: field.specialMovePowerUp)
+        let specialMoveDamageModifier = specialMoveDamageModifier(
+            isCollisionCourseStyleBoosted: field.isCollisionCourseStyleBoosted
+        )
         let criticalModifier = criticalModifier(isCritical: field.isCritical)
         let typeEffectiveness = typeEffectiveness(
             moveType: attacker.moveType,
@@ -68,8 +72,8 @@ public struct DamageCalculator {
                     finalOffensiveStat: finalOffensiveStat,
                     finalDefensiveStat: finalDefensiveStat
                 )
-                .applyingMoveTargetScope(field.moveTargetScope)
-                .applyingParentalBondHit(field.parentalBondHit)
+                .applyingMoveTargetScope(moveTargetScope)
+                .applyingParentalBondHit(parentalBondHit)
                 .applyingWeatherModifier(weatherDamageModifier)
                 .applyingSpecialMoveDamageModifier(specialMoveDamageModifier)
                 .applyingCriticalModifier(criticalModifier)
@@ -115,15 +119,18 @@ public struct DamageCalculator {
         }
     }
 
+    private static func moveTargetScope(isSpreadMove: Bool) -> MoveTargetScope {
+        isSpreadMove ? .multiple : .single
+    }
+
+    private static func parentalBondHit(isSecondHit: Bool) -> ParentalBondHit {
+        isSecondHit ? .second : .normal
+    }
+
     private static func specialMoveDamageModifier(
-        for specialMovePowerUp: SpecialMovePowerUp
+        isCollisionCourseStyleBoosted: Bool
     ) -> SpecialMoveDamageModifier {
-        switch specialMovePowerUp {
-        case .none:
-            .none
-        case .collisionCourseStyle:
-            .collisionCourseStyle
-        }
+        isCollisionCourseStyleBoosted ? .collisionCourseStyle : .none
     }
 
     private static func criticalModifier(isCritical: Bool) -> CriticalModifier {

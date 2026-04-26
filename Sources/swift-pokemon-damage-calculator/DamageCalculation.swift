@@ -63,26 +63,26 @@ public struct DamageCalculation {
 
         public struct Field {
             public let weather: BattleWeather
-            public let moveTargetScope: MoveTargetScope
-            public let parentalBondHit: ParentalBondHit
-            public let specialMovePowerUp: SpecialMovePowerUp
+            public let isSpreadMove: Bool
+            public let isParentalBondSecondHit: Bool
+            public let isCollisionCourseStyleBoosted: Bool
             public let isCritical: Bool
             public let isProtectedByZMove: Bool
             public let isProtectedByMaxMove: Bool
 
             public init(
                 weather: BattleWeather,
-                moveTargetScope: MoveTargetScope = .single,
-                parentalBondHit: ParentalBondHit = .normal,
-                specialMovePowerUp: SpecialMovePowerUp = .none,
+                isSpreadMove: Bool = false,
+                isParentalBondSecondHit: Bool = false,
+                isCollisionCourseStyleBoosted: Bool = false,
                 isCritical: Bool = false,
                 isProtectedByZMove: Bool = false,
                 isProtectedByMaxMove: Bool = false
             ) {
                 self.weather = weather
-                self.moveTargetScope = moveTargetScope
-                self.parentalBondHit = parentalBondHit
-                self.specialMovePowerUp = specialMovePowerUp
+                self.isSpreadMove = isSpreadMove
+                self.isParentalBondSecondHit = isParentalBondSecondHit
+                self.isCollisionCourseStyleBoosted = isCollisionCourseStyleBoosted
                 self.isCritical = isCritical
                 self.isProtectedByZMove = isProtectedByZMove
                 self.isProtectedByMaxMove = isProtectedByMaxMove
