@@ -6,6 +6,8 @@
 //
 //
 
+import PokemonTypes
+
 public enum DefenderTypes: Equatable {
     case single(PokemonType)
     case dual(PokemonType, PokemonType)

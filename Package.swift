@@ -13,15 +13,24 @@ let package = Package(
             targets: ["swift-pokemon-damage-calculator"]
         ),
     ],
+    dependencies: [
+        .package(url: "https://github.com/elmetal/swift-pokemon-types", from: "0.0.1")
+    ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "swift-pokemon-damage-calculator"
+            name: "swift-pokemon-damage-calculator",
+            dependencies: [
+                .product(name: "PokemonTypes", package: "swift-pokemon-types")
+            ]
         ),
         .testTarget(
             name: "swift-pokemon-damage-calculatorTests",
-            dependencies: ["swift-pokemon-damage-calculator"]
+            dependencies: [
+                "swift-pokemon-damage-calculator",
+                .product(name: "PokemonTypes", package: "swift-pokemon-types"),
+            ]
         ),
     ],
     swiftLanguageModes: [.v6]

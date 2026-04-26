@@ -6,6 +6,8 @@
 //
 //
 
+import PokemonTypes
+
 public struct DamageCalculator {
     public static func calculate(for context: DamageCalculation.Context) -> InlineArray<16, Int> {
         let attacker = context.attacker

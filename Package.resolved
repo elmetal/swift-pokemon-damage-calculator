@@ -1,0 +1,15 @@
+{
+  "originHash" : "0ee589586c5a7e27879eb8be6c0988f4e205bbf5af96e3a4e382339f32dc8a93",
+  "pins" : [
+    {
+      "identity" : "swift-pokemon-types",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/elmetal/swift-pokemon-types",
+      "state" : {
+        "revision" : "1e3e45e89a5757ddc9a730e22e012f16a8eb78b4",
+        "version" : "0.0.1"
+      }
+    }
+  ],
+  "version" : 3
+}

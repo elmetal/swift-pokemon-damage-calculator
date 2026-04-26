@@ -6,6 +6,8 @@
 //
 //
 
+import PokemonTypes
+
 struct FinalDamage {
     let value: Int
 

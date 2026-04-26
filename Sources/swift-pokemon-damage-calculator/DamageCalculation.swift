@@ -6,6 +6,8 @@
 //
 //
 
+import PokemonTypes
+
 public struct DamageCalculation {
     public struct Context {
         public struct Attacker {

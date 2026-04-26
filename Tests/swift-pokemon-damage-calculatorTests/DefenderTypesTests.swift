@@ -1,6 +1,26 @@
+import PokemonTypes
 import Testing
 
 @testable import swift_pokemon_damage_calculator
+
+@Test(arguments: PokemonTypes.PokemonType.allCases, PokemonTypes.PokemonType.allCases)
+func typeChartMatchesLatestTypeEffectivenessTableForSingleTypes(
+    attackType: PokemonTypes.PokemonType,
+    defenderType: PokemonTypes.PokemonType
+) {
+    let multiplier = TypeChart.effectivenessMultiplier(
+        attackType: attackType,
+        defenderTypes: .single(defenderType)
+    )
+    let effectiveness = LatestTypeEffectivenessTable().effectiveness(
+        of: attackType,
+        against: defenderType
+    )
+    let expectedMultiplier = expectedTypeMultiplier(for: effectiveness)
+
+    #expect(multiplier.numerator == expectedMultiplier.numerator)
+    #expect(multiplier.denominator == expectedMultiplier.denominator)
+}
 
 @Test func typeChartComposesSingleTypeMultipliersForDualTypes() {
     let multiplier = TypeChart.effectivenessMultiplier(
@@ -40,4 +60,19 @@ import Testing
 
     #expect(multiplier.numerator == 0)
     #expect(multiplier.denominator == 1)
+}
+
+private func expectedTypeMultiplier(
+    for effectiveness: PokemonTypes.TypeEffectiveness
+) -> TypeMultiplier {
+    switch effectiveness {
+    case .ineffective:
+        .zero
+    case .notVeryEffective:
+        .half
+    case .neutral:
+        .neutral
+    case .superEffective:
+        .double
+    }
 }
