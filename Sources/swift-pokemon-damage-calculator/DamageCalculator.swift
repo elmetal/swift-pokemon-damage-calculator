@@ -23,7 +23,7 @@ public struct DamageCalculator {
             isCollisionCourseStyleBoosted: field.isCollisionCourseStyleBoosted
         )
         let criticalModifier = criticalModifier(isCritical: field.isCritical)
-        let typeMultiplier = TypeChart.effectivenessMultiplier(
+        let typeMultiplier = TypeMultiplier.effectiveness(
             attackType: attacker.moveType,
             defenderTypes: defender.defenderTypes
         )

@@ -4,11 +4,11 @@ import Testing
 @testable import swift_pokemon_damage_calculator
 
 @Test(arguments: PokemonTypes.PokemonType.allCases, PokemonTypes.PokemonType.allCases)
-func typeChartMatchesLatestTypeEffectivenessTableForSingleTypes(
+func typeMultiplierMatchesLatestTypeEffectivenessTableForSingleTypes(
     attackType: PokemonTypes.PokemonType,
     defenderType: PokemonTypes.PokemonType
 ) {
-    let multiplier = TypeChart.effectivenessMultiplier(
+    let multiplier = TypeMultiplier.effectiveness(
         attackType: attackType,
         defenderTypes: .single(defenderType)
     )
@@ -16,14 +16,14 @@ func typeChartMatchesLatestTypeEffectivenessTableForSingleTypes(
         of: attackType,
         against: defenderType
     )
-    let expectedMultiplier = expectedTypeMultiplier(for: effectiveness)
+    let expectedMultiplier = TypeMultiplier(typeEffectiveness: effectiveness)
 
     #expect(multiplier.numerator == expectedMultiplier.numerator)
     #expect(multiplier.denominator == expectedMultiplier.denominator)
 }
 
-@Test func typeChartComposesSingleTypeMultipliersForDualTypes() {
-    let multiplier = TypeChart.effectivenessMultiplier(
+@Test func typeMultiplierComposesSingleTypeMultipliersForDualTypes() {
+    let multiplier = TypeMultiplier.effectiveness(
         attackType: .ground,
         defenderTypes: .dual(.grass, .fighting)
     )
@@ -32,8 +32,8 @@ func typeChartMatchesLatestTypeEffectivenessTableForSingleTypes(
     #expect(multiplier.denominator == 2)
 }
 
-@Test func typeChartSupportsQuadrupleWeakness() {
-    let multiplier = TypeChart.effectivenessMultiplier(
+@Test func typeMultiplierSupportsQuadrupleWeakness() {
+    let multiplier = TypeMultiplier.effectiveness(
         attackType: .ice,
         defenderTypes: .dual(.ground, .flying)
     )
@@ -42,8 +42,8 @@ func typeChartMatchesLatestTypeEffectivenessTableForSingleTypes(
     #expect(multiplier.denominator == 1)
 }
 
-@Test func typeChartSupportsQuarterResistance() {
-    let multiplier = TypeChart.effectivenessMultiplier(
+@Test func typeMultiplierSupportsQuarterResistance() {
+    let multiplier = TypeMultiplier.effectiveness(
         attackType: .grass,
         defenderTypes: .dual(.fire, .dragon)
     )
@@ -52,27 +52,12 @@ func typeChartMatchesLatestTypeEffectivenessTableForSingleTypes(
     #expect(multiplier.denominator == 4)
 }
 
-@Test func typeChartSupportsImmunity() {
-    let multiplier = TypeChart.effectivenessMultiplier(
+@Test func typeMultiplierSupportsImmunity() {
+    let multiplier = TypeMultiplier.effectiveness(
         attackType: .dragon,
         defenderTypes: .single(.fairy)
     )
 
     #expect(multiplier.numerator == 0)
     #expect(multiplier.denominator == 1)
-}
-
-private func expectedTypeMultiplier(
-    for effectiveness: PokemonTypes.TypeEffectiveness
-) -> TypeMultiplier {
-    switch effectiveness {
-    case .ineffective:
-        .zero
-    case .notVeryEffective:
-        .half
-    case .neutral:
-        .neutral
-    case .superEffective:
-        .double
-    }
 }
