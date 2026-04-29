@@ -27,8 +27,14 @@ public struct DamageCalculator {
             attackType: attacker.moveType,
             defenderTypes: defender.defenderTypes
         )
-        let offensiveRankMultiplier = offensiveStatRankMultiplier(for: attacker.offensiveStatStage)
-        let defensiveRankMultiplier = defensiveStatRankMultiplier(for: defender.defensiveStatStage)
+        let offensiveRankMultiplier = offensiveStatRankMultiplier(
+            for: attacker.offensiveStatStage,
+            isCritical: field.isCritical
+        )
+        let defensiveRankMultiplier = defensiveStatRankMultiplier(
+            for: defender.defensiveStatStage,
+            isCritical: field.isCritical
+        )
         let zMoveProtectModifier = zMoveProtectModifier(isProtected: field.isProtectedByZMove)
         let maxMoveProtectModifier = maxMoveProtectModifier(isProtected: field.isProtectedByMaxMove)
 
@@ -148,16 +154,20 @@ public struct DamageCalculator {
     }
 
     private static func offensiveStatRankMultiplier(
-        for stage: StatStage
+        for stage: StatStage,
+        isCritical: Bool
     ) -> OffensiveStatRankMultiplier {
-        let (numerator, denominator) = rankFraction(for: stage)
+        let effectiveStage = isCritical && stage.rawValue < 0 ? .neutral : stage
+        let (numerator, denominator) = rankFraction(for: effectiveStage)
         return OffensiveStatRankMultiplier(numerator: numerator, denominator: denominator)
     }
 
     private static func defensiveStatRankMultiplier(
-        for stage: StatStage
+        for stage: StatStage,
+        isCritical: Bool
     ) -> DefensiveStatRankMultiplier {
-        let (numerator, denominator) = rankFraction(for: stage)
+        let effectiveStage = isCritical && stage.rawValue > 0 ? .neutral : stage
+        let (numerator, denominator) = rankFraction(for: effectiveStage)
         return DefensiveStatRankMultiplier(numerator: numerator, denominator: denominator)
     }
 

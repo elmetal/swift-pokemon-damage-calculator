@@ -139,3 +139,67 @@ import Testing
         ] == [117, 118, 120, 120, 122, 123, 125, 126, 128, 129, 130, 132, 133, 135, 136, 138]
     )
 }
+
+@Test func damageCalculatorCalculateIgnoresNegativeOffensiveStageOnCriticalHit() {
+    let damages = DamageCalculator.calculate(
+        for: DamageCalculation.Context(
+            attacker: DamageCalculation.Context.Attacker(
+                level: PokemonLevel(value: 50),
+                movePower: MovePower(value: 100),
+                moveType: .ground,
+                offensiveStat: OffensiveStat(value: 182),
+                offensiveStatStage: .minusOne,
+                attackerTypes: .single(.ground),
+                terastalState: .none,
+                ability: .none
+            ),
+            defender: DamageCalculation.Context.Defender(
+                defensiveStat: DefensiveStat(value: 100),
+                defensiveStatCategory: .physical,
+                defenderTypes: .dual(.grass, .fighting)
+            ),
+            field: DamageCalculation.Context.Field(weather: .clear, isCritical: true)
+        )
+    )
+
+    #expect(
+        [
+            damages[0], damages[1], damages[2], damages[3],
+            damages[4], damages[5], damages[6], damages[7],
+            damages[8], damages[9], damages[10], damages[11],
+            damages[12], damages[13], damages[14], damages[15],
+        ] == [78, 78, 80, 81, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 90, 92]
+    )
+}
+
+@Test func damageCalculatorCalculateIgnoresPositiveDefensiveStageOnCriticalHit() {
+    let damages = DamageCalculator.calculate(
+        for: DamageCalculation.Context(
+            attacker: DamageCalculation.Context.Attacker(
+                level: PokemonLevel(value: 50),
+                movePower: MovePower(value: 100),
+                moveType: .ground,
+                offensiveStat: OffensiveStat(value: 182),
+                attackerTypes: .single(.ground),
+                terastalState: .none,
+                ability: .none
+            ),
+            defender: DamageCalculation.Context.Defender(
+                defensiveStat: DefensiveStat(value: 100),
+                defensiveStatCategory: .physical,
+                defensiveStatStage: .plusOne,
+                defenderTypes: .dual(.grass, .fighting)
+            ),
+            field: DamageCalculation.Context.Field(weather: .clear, isCritical: true)
+        )
+    )
+
+    #expect(
+        [
+            damages[0], damages[1], damages[2], damages[3],
+            damages[4], damages[5], damages[6], damages[7],
+            damages[8], damages[9], damages[10], damages[11],
+            damages[12], damages[13], damages[14], damages[15],
+        ] == [78, 78, 80, 81, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 90, 92]
+    )
+}
