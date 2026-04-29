@@ -3,6 +3,8 @@ import Testing
 
 @testable import swift_pokemon_damage_calculator
 
+private let singleTypeMultipliers: [TypeMultiplier] = [.zero, .half, .neutral, .double]
+
 @Test(arguments: PokemonTypes.PokemonType.allCases, PokemonTypes.PokemonType.allCases)
 func typeMultiplierMatchesLatestTypeEffectivenessTableForSingleTypes(
     attackType: PokemonTypes.PokemonType,
@@ -18,8 +20,7 @@ func typeMultiplierMatchesLatestTypeEffectivenessTableForSingleTypes(
     )
     let expectedMultiplier = TypeMultiplier(typeEffectiveness: effectiveness)
 
-    #expect(multiplier.numerator == expectedMultiplier.numerator)
-    #expect(multiplier.denominator == expectedMultiplier.denominator)
+    #expect(multiplier == expectedMultiplier)
 }
 
 @Test func typeMultiplierComposesSingleTypeMultipliersForDualTypes() {
@@ -28,8 +29,7 @@ func typeMultiplierMatchesLatestTypeEffectivenessTableForSingleTypes(
         defenderTypes: .dual(.grass, .fighting)
     )
 
-    #expect(multiplier.numerator == 1)
-    #expect(multiplier.denominator == 2)
+    #expect(multiplier == .half)
 }
 
 @Test func typeMultiplierSupportsQuadrupleWeakness() {
@@ -38,8 +38,7 @@ func typeMultiplierMatchesLatestTypeEffectivenessTableForSingleTypes(
         defenderTypes: .dual(.ground, .flying)
     )
 
-    #expect(multiplier.numerator == 4)
-    #expect(multiplier.denominator == 1)
+    #expect(multiplier == .quadruple)
 }
 
 @Test func typeMultiplierSupportsQuarterResistance() {
@@ -48,8 +47,7 @@ func typeMultiplierMatchesLatestTypeEffectivenessTableForSingleTypes(
         defenderTypes: .dual(.fire, .dragon)
     )
 
-    #expect(multiplier.numerator == 1)
-    #expect(multiplier.denominator == 4)
+    #expect(multiplier == .quarter)
 }
 
 @Test func typeMultiplierSupportsImmunity() {
@@ -58,6 +56,13 @@ func typeMultiplierMatchesLatestTypeEffectivenessTableForSingleTypes(
         defenderTypes: .single(.fairy)
     )
 
-    #expect(multiplier.numerator == 0)
-    #expect(multiplier.denominator == 1)
+    #expect(multiplier == .zero)
+}
+
+@Test(arguments: singleTypeMultipliers, singleTypeMultipliers)
+func typeMultiplierCompositionOfSingleTypeResultsStaysInTypeEffectivenessSpace(
+    lhs: TypeMultiplier,
+    rhs: TypeMultiplier
+) {
+    #expect(TypeMultiplier.allCases.contains(lhs.multiplied(by: rhs)))
 }
