@@ -46,7 +46,7 @@ struct FinalOffensiveStatCalculation {
                         numerator: value * 6144,
                         denominator: 4096
                     ).rounded(.down)
-                case .adaptability, .guts:
+                case .technician, .adaptability, .guts:
                     value
                 }
 

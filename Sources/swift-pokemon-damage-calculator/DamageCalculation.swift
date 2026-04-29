@@ -19,6 +19,7 @@ public struct DamageCalculation {
             public let attackerTypes: AttackerTypes
             public let terastalState: TerastalState
             public let ability: AttackerAbility
+            public let item: AttackerItem
             public let burnStatus: BurnStatus
 
             public init(
@@ -30,6 +31,7 @@ public struct DamageCalculation {
                 attackerTypes: AttackerTypes = .single(.rock),
                 terastalState: TerastalState = .none,
                 ability: AttackerAbility,
+                item: AttackerItem = .none,
                 burnStatus: BurnStatus = .none
             ) {
                 self.level = level
@@ -40,6 +42,7 @@ public struct DamageCalculation {
                 self.attackerTypes = attackerTypes
                 self.terastalState = terastalState
                 self.ability = ability
+                self.item = item
                 self.burnStatus = burnStatus
             }
         }
@@ -49,17 +52,20 @@ public struct DamageCalculation {
             public let defensiveStatCategory: DefensiveStatCategory
             public let defensiveStatStage: StatStage
             public let defenderTypes: DefenderTypes
+            public let item: DefenderItem
 
             public init(
                 defensiveStat: DefensiveStat,
                 defensiveStatCategory: DefensiveStatCategory,
                 defensiveStatStage: StatStage = .neutral,
-                defenderTypes: DefenderTypes
+                defenderTypes: DefenderTypes,
+                item: DefenderItem = .none
             ) {
                 self.defensiveStat = defensiveStat
                 self.defensiveStatCategory = defensiveStatCategory
                 self.defensiveStatStage = defensiveStatStage
                 self.defenderTypes = defenderTypes
+                self.item = item
             }
         }
 

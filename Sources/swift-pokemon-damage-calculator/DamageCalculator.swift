@@ -37,11 +37,18 @@ public struct DamageCalculator {
         )
         let zMoveProtectModifier = zMoveProtectModifier(isProtected: field.isProtectedByZMove)
         let maxMoveProtectModifier = maxMoveProtectModifier(isProtected: field.isProtectedByMaxMove)
+        let movePowerModifier = movePowerModifier(for: attacker)
+        let offensiveStatModifier = offensiveStatModifier(
+            for: attacker,
+            moveCategory: defender.defensiveStatCategory
+        )
+        let defensiveStatModifier = defensiveStatModifier(for: defender)
+        let damageModifier = damageModifier(for: attacker)
 
         let finalMovePower =
             FinalMovePowerCalculation
             .start(with: attacker.movePower)
-            .applying(MovePowerModifierCalculation.start.finalize())
+            .applying(movePowerModifier)
             .rounded()
             .ensuringMinimumValue(of: 1)
 
@@ -53,7 +60,7 @@ public struct DamageCalculator {
             )
             .applying(offensiveRankMultiplier)
             .applyingAttackerAbility()
-            .applying(OffensiveStatModifierCalculation.start.finalize())
+            .applying(offensiveStatModifier)
             .rounded()
             .ensuringMinimumValue(of: 1)
 
@@ -67,11 +74,10 @@ public struct DamageCalculator {
             )
             .applying(defensiveRankMultiplier)
             .applyingWeatherBoost()
-            .applying(DefensiveStatModifierCalculation.start.finalize())
+            .applying(defensiveStatModifier)
             .rounded()
             .ensuringMinimumValue(of: 1)
 
-        let damageModifier = DamageModifierCalculation.start.finalize()
         let values = DamageRandomFactor.all.map { randomFactor in
             FinalDamageCalculation
                 .start(level: attacker.level)
@@ -143,6 +149,56 @@ public struct DamageCalculator {
 
     private static func criticalModifier(isCritical: Bool) -> CriticalModifier {
         isCritical ? .critical : .normal
+    }
+
+    private static func movePowerModifier(
+        for attacker: DamageCalculation.Context.Attacker
+    ) -> MovePowerModifierCalculation.Finalized {
+        if attacker.ability == .technician && attacker.movePower.value <= 60 {
+            return MovePowerModifierCalculation.start
+                .applying(MovePowerModifier(numerator: 6144))
+                .finalize()
+        }
+
+        return MovePowerModifierCalculation.start.finalize()
+    }
+
+    private static func offensiveStatModifier(
+        for attacker: DamageCalculation.Context.Attacker,
+        moveCategory: DefensiveStatCategory
+    ) -> OffensiveStatModifierCalculation.Finalized {
+        if attacker.ability == .guts && attacker.burnStatus == .burned && moveCategory == .physical
+        {
+            return OffensiveStatModifierCalculation.start
+                .applying(OffensiveStatModifier(numerator: 6144))
+                .finalize()
+        }
+
+        return OffensiveStatModifierCalculation.start.finalize()
+    }
+
+    private static func defensiveStatModifier(
+        for defender: DamageCalculation.Context.Defender
+    ) -> DefensiveStatModifierCalculation.Finalized {
+        if defender.item == .assaultVest && defender.defensiveStatCategory == .special {
+            return DefensiveStatModifierCalculation.start
+                .applying(DefensiveStatModifier(numerator: 6144))
+                .finalize()
+        }
+
+        return DefensiveStatModifierCalculation.start.finalize()
+    }
+
+    private static func damageModifier(
+        for attacker: DamageCalculation.Context.Attacker
+    ) -> DamageModifierCalculation.Finalized {
+        if attacker.item == .lifeOrb {
+            return DamageModifierCalculation.start
+                .applying(DamageModifier(numerator: 5325))
+                .finalize()
+        }
+
+        return DamageModifierCalculation.start.finalize()
     }
 
     private static func zMoveProtectModifier(isProtected: Bool) -> ZMoveProtectModifier {
