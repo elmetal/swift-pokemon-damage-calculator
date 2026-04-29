@@ -11,4 +11,5 @@ public enum BattleWeather: Equatable {
     case sun
     case rain
     case sandstorm
+    case snow
 }

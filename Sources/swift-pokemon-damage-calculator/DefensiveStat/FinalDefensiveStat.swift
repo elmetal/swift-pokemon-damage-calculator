@@ -43,12 +43,14 @@ struct FinalDefensiveStatCalculation {
         fileprivate let weather: BattleWeather
 
         func applyingWeatherBoost() -> WeatherAdjusted {
+            let appliesSandstormBoost =
+                category == .special && weather == .sandstorm && defenderTypes.contains(.rock)
+            let appliesSnowBoost =
+                category == .physical && weather == .snow && defenderTypes.contains(.ice)
             let adjustedValue =
-                if category == .special && weather == .sandstorm && defenderTypes.contains(.rock) {
-                    DamageCalculation.Quotient(
-                        numerator: value * 6144,
-                        denominator: 4096
-                    ).rounded(.down)
+                if appliesSandstormBoost || appliesSnowBoost {
+                    DamageCalculation.Quotient(numerator: value * 6144, denominator: 4096)
+                        .rounded(.down)
                 } else {
                     value
                 }

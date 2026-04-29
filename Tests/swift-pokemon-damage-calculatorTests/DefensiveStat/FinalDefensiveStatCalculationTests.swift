@@ -42,6 +42,28 @@ import Testing
     #expect(finalDefensiveStat.value == 195)
 }
 
+@Test func finalDefensiveStatCalculationAppliesSnowIceBoostForPhysicalDefense() {
+    let finalDefensiveStat =
+        FinalDefensiveStatCalculation
+        .start(
+            with: DefensiveStat(value: 100),
+            category: .physical,
+            defenderTypes: .dual(.ice, .ghost),
+            weather: .snow
+        )
+        .applying(DefensiveStatRankMultiplier(numerator: 1, denominator: 1))
+        .applyingWeatherBoost()
+        .applying(
+            DefensiveStatModifierCalculation.start
+                .applying(DefensiveStatModifier(numerator: 5325))
+                .finalize()
+        )
+        .rounded()
+        .ensuringMinimumValue(of: 1)
+
+    #expect(finalDefensiveStat.value == 195)
+}
+
 @Test func finalDefensiveStatCalculationRoundsModifierUsingToNearestOrDown() {
     let finalDefensiveStat =
         FinalDefensiveStatCalculation
